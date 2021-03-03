@@ -27,7 +27,7 @@ class Word {
  public:
   // Representing each word-class
   enum class WordClass {
-    kVerb,
+    kVerb = 1,
     kNoun,
     kAdjective,
     kAdverb
@@ -57,12 +57,12 @@ class Word {
 
  private:
   std::string name;
-  std::vector<std::string> meanings;  // Support multiple meaning
-  WordClass classification;           // Representing word-class
+  std::vector<std::string> meanings;              // Support multiple meaning
+  WordClass classification;                       // Representing word-class
+  bool MeaningExist(const std::string& m) const;  // Check if meaning m exist
 };
 
-// Print formatted (human read) Word to os,
-// return os
+// Print formatted (human read) Word to os, return os
 std::ostream& PrintWord(const Word& w, std::ostream& os);
 
 // Print Word in default format
