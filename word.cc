@@ -154,10 +154,11 @@ struct Reading {
 * }
 */
 std::istream& operator>>(std::istream& is, Word& w) {
-  Reading rw;
-  std::string text;       // Temporary string for reading input
-  char sep{};             // Temporary char for reading input
+  Reading rw;           // Auxiliary class
+  std::string text;     // Temporary string for reading input
+  char sep{};           // Temporary char for reading input
 
+  // Reading separator for start of the Word
   is >> sep;
   if (!is) return is;
   if (sep != '{') {
@@ -186,6 +187,7 @@ std::istream& operator>>(std::istream& is, Word& w) {
   if (!is) return is;
   rw.classification = IntToWordClass(wc);
 
+  // Reading separator between word-class and start of meanings
   is >> sep;
   if (!is) return is;
   if (sep != ':') {
@@ -193,6 +195,7 @@ std::istream& operator>>(std::istream& is, Word& w) {
     throw BadInput("Bad separator", is);
   }
 
+  // Reading separator for start of the meanings
   is >> sep;
   if (!is) return is;
   if (sep != '(') {
@@ -209,28 +212,31 @@ std::istream& operator>>(std::istream& is, Word& w) {
 
     is >> sep;
     if (!is) return is;
-    if (sep == ':') {
-      rw.meanings.push_back(meaning);
+    if (sep == ':') {   // Separator between meanings
+      rw.meanings.push_back(meaning);   // Save readed meaning
 
       is >> sep;
       if (!is) return is;
-      if (sep == ')') break;
+      if (sep == ')') break;  // End of meanings
       else is.unget();
 
-      meaning.clear();
+      meaning.clear();  // Empty string to read a new meaning
     } else {
       is.unget();
-      meaning += " ";
+      meaning += " ";   // Meaning doesn't complete yet
     }
   }
 
+  // Reading separator for end of the Word
   is >> sep;
   if (!is) return is;
   if (sep != '}')
     throw BadInput("Bad end of Word", is);
 
-  w.name = rw.name;
+  w.name = rw.name; // Copy name from Reading to Word
 
+  // Copy meanings from Reading to Word
+  // Skip for the same meaning
   meaning.clear();
   for (const auto& m : rw.meanings) {
     if (meaning == m) continue;
@@ -238,6 +244,7 @@ std::istream& operator>>(std::istream& is, Word& w) {
     meaning = m;
   }
 
+  // Copy classification from Reading to Word
   w.classification = rw.classification;
   return is;
 }
