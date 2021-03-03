@@ -13,7 +13,7 @@ namespace my_dictionary {
 
 // Only display error message
 bool Error::Handle() const {
-  std::cerr << what() << endl;
+  std::cerr << what() << std::endl;
 
   if (std::cerr) return true;
   else return false;
@@ -22,7 +22,7 @@ bool Error::Handle() const {
 // Clear the state of input_stream,
 // if badbit set for input_stream then return false
 bool BadInput::Handle() const {
-  std::cerr << what() << endl;
+  std::cerr << what() << std::endl;
 
   // If input_stream corrupt give up
   if (input_stream.bad()) return false;
