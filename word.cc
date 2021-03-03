@@ -99,9 +99,27 @@ std::ostream& PrintWord(const Word& w, std::ostream& os) {
   return os;
 }
 
+// Convert Word::WordClass to int
+// kVerb == 1, kNoun == 2
+// kAdjective == 3, kAdverb == 4
+int WordClassToInt(Word::WordClass wc) {
+  switch (wc) {
+    case Word::WordClass::kVerb:
+      return 1;
+    case Word::WordClass::kNoun:
+      return 2;
+    case Word::WordClass::kAdjective:
+      return 3;
+    case Word::WordClass::kAdverb:
+      return 4;
+    default:
+      throw Error("Unknown word-class");
+  }
+}
+
 /* Print Word in default format
 * Default format:
-* { word-name : word-class (string) : 
+* { word-name : word-class (int) : 
 *   ( meaning 1 : meaning 2 : ...: )
 * }
 */
@@ -109,7 +127,7 @@ std::ostream& operator<<(std::ostream& os, const Word& w) {
   std::ostringstream oss;   // Output string stream
   
   // Print word-name and word-class
-  oss << "{ " << w.name << " : " << WordClassToStr(w.classification)
+  oss << "{ " << w.name << " : " << WordClassToInt(w.classification)
     << " :\n  ( ";
 
   // Print meanings
