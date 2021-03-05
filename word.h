@@ -78,6 +78,9 @@ std::ostream& operator<<(std::ostream& os, const Word& w);
 // Read Word in default format
 std::istream& operator>>(std::istream& is, Word& w);
 
+// Convert int to Word::WordClass
+Word::WordClass IntToWordClass(int n);
+
 } // my_dictionary
 
 #endif  // MY_DICTIONARY_WORD_H_
