@@ -8,6 +8,7 @@
 #include "my_dictionary/word.h"
 
 #include <algorithm>
+#include <iomanip>
 #include <iostream>
 #include <sstream>
 #include <string>
@@ -16,6 +17,11 @@
 #include "my_dictionary/error.h"
 
 namespace my_dictionary {
+
+// Construct Word from string and int
+// initialize its name and classification (from int)
+Word::Word(const std::string& wn, int wc)
+  : name(wn), classification(IntToWordClass(wc)) { }
 
 // Check if meaning m already exist
 bool Word::MeaningExist(const std::string& m) const { 
@@ -43,8 +49,8 @@ void Word::AddMeaning(const std::string& m) {
 void Word::RemoveMeaning(const std::string& m) {
   for (auto it = meanings.cbegin(); it != meanings.cend(); ++it) {
     if (*it == m) meanings.erase(it);  // Remove meaning m
+    return;
   }
-
   // Meaning m doesn't exist, throw Error
   throw Error("Meaning \""+m+"\" doesn't exist in word \""+name+"\"");
 }
@@ -60,15 +66,17 @@ std::string Word::get_meanings() const {
 
   // Write formatted meanings to output string stream
   for (const auto& m : meanings) {
-    oss << " - " << m << "\n";
+    oss << std::setw(4) << "- " << m << "\n";
   }
 
   return oss.str();
 }
 
-// Convert Word::WordClass to string
-std::string WordClassToStr(Word::WordClass wc) {
-  switch (wc) {
+// Return Word::WordClass as string
+// kVerb == "Verb", kNoun == "Noun"
+// kAdjective == "Adjective", kAdverb == "Adverb"
+std::string Word::WordClassToStr() const {
+  switch (classification) {
     case Word::WordClass::kVerb:
       return "Verb";
     case Word::WordClass::kNoun:
@@ -91,19 +99,19 @@ std::string WordClassToStr(Word::WordClass wc) {
 */
 std::ostream& PrintWord(const Word& w, std::ostream& os) {
   std::ostringstream oss;   // Output string stream
-  oss << w.get_name() << "\t\t"
-    << "(" << WordClassToStr(w.get_class()) << ") :\n"
+  oss << w.get_name() << std::setw(3)
+    << "(" << w.WordClassToStr() << ") :\n"
     << w.get_meanings();
 
   os << oss.str();  // Write to ostream os
   return os;
 }
 
-// Convert Word::WordClass to int
+// Return Word::WordClass as int
 // kVerb == 1, kNoun == 2
 // kAdjective == 3, kAdverb == 4
-int WordClassToInt(Word::WordClass wc) {
-  switch (wc) {
+int Word::WordClassToInt() const {
+  switch (classification) {
     case Word::WordClass::kVerb:
       return 1;
     case Word::WordClass::kNoun:
@@ -120,22 +128,26 @@ int WordClassToInt(Word::WordClass wc) {
 /* Print Word in default format
 * Default format:
 * { word-name : word-class (int) : 
-*   ( meaning 1 : meaning 2 : ...: )
+*   ( meaning 1 : meaning 2 : ... )
 * }
 */
 std::ostream& operator<<(std::ostream& os, const Word& w) {
   std::ostringstream oss;   // Output string stream
   
   // Print word-name and word-class
-  oss << "{ " << w.name << " : " << WordClassToInt(w.classification)
+  oss << "{ " << w.name << " : " << w.WordClassToInt()
     << " :\n  ( ";
 
   // Print meanings
-  for (const auto& m : w.meanings) {
-    oss << m << " : ";
+  for (decltype(w.meanings.size()) ind = 0;
+        ind != w.meanings.size(); ++ind) {
+    oss << w.meanings[ind];
+    if (ind != w.meanings.size()-1) {   // Not last meaning
+      oss << " : ";   // Print separator
+    }
   }
 
-  oss << ")\n}";
+  oss << " )\n}";
   os << oss.str();  // Write to ostream os
   return os;
 }
@@ -158,7 +170,7 @@ Word::WordClass IntToWordClass(int n) {
   }
 }
 
-// Auxiliary type for reading Word
+// Auxiliary class for reading Word
 struct Reading {
   std::string name;
   std::vector<std::string> meanings;
@@ -166,9 +178,10 @@ struct Reading {
 };
 
 /* Read Word in default format
+* Maintain meanings in lexicographical order
 * Default format:
 * { word-name : word-class (int) :
-*   ( meaning 1 : meaning 2 : ... : )
+*   ( meaning 1 : meaning 2 : ... )
 * }
 */
 std::istream& operator>>(std::istream& is, Word& w) {
@@ -184,7 +197,7 @@ std::istream& operator>>(std::istream& is, Word& w) {
     throw BadInput("Bad start of Word", is);
   }
 
-  // Reading Word.name
+  // Reading word-name
   while (true) {
     is >> text;
     if (!is) return is;
@@ -193,7 +206,7 @@ std::istream& operator>>(std::istream& is, Word& w) {
     is >> sep;
     if (!is) return is;
 
-    if (sep == ':') break;
+    if (sep == ':') break;  // Separator between word-name and word-class
     else is.unget();
 
     rw.name += " ";
@@ -230,14 +243,11 @@ std::istream& operator>>(std::istream& is, Word& w) {
 
     is >> sep;
     if (!is) return is;
-    if (sep == ':') {   // Separator between meanings
+    if (sep == ')') {   // End of meanings
       rw.meanings.push_back(meaning);   // Save readed meaning
-
-      is >> sep;
-      if (!is) return is;
-      if (sep == ')') break;  // End of meanings
-      else is.unget();
-
+      break;
+    } else if (sep == ':') {   // Separator between meanings
+      rw.meanings.push_back(meaning);   // Save readed meaning
       meaning.clear();  // Empty string to read a new meaning
     } else {
       is.unget();
@@ -261,6 +271,7 @@ std::istream& operator>>(std::istream& is, Word& w) {
     w.meanings.push_back(m);
     meaning = m;
   }
+  std::sort(w.meanings.begin(), w.meanings.end());  // Sort meanings
 
   // Copy classification from Reading to Word
   w.classification = rw.classification;

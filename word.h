@@ -11,7 +11,7 @@
 */
 
 #ifndef MY_DICTIONARY_WORD_H_
-#define MY_DICTIONARY_WORD_H
+#define MY_DICTIONARY_WORD_H_
 
 #include <iostream>
 #include <string>
@@ -45,6 +45,10 @@ class Word {
   Word(const std::string& wn, WordClass wc)
     : name(wn), classification(wc) { }
 
+  // Construct Word from string and int
+  // initialize its name and classification (from int)
+  Word(const std::string& wn, int wc);
+
   std::string get_name() const { return name; }
   void set_name(const std::string& wn) { name = wn; }
 
@@ -54,6 +58,9 @@ class Word {
 
   WordClass get_class() const { return classification; }
   void set_class(WordClass wc) { classification = wc; }
+
+  int WordClassToInt() const;         // Return Word::WordClass as int
+  std::string WordClassToStr() const; // Return Word::Wordclass as string
 
  private:
   std::string name;
