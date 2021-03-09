@@ -144,7 +144,7 @@ void EditWord(Word& w);
 void ShowMenuEditDict(const Dictionary& dict) {
   ClearScreen();
   std::cout << "Dictionary : " << dict.get_name()
-            << "Word       : " << dict.WordCount() << " words"
+            << "\nWord       : " << dict.WordCount() << " words"
             << "\n\nMenu for editting dictionary : "
             << "\n1.) Add word"
             << "\n2.) Remove word"
