@@ -20,22 +20,21 @@ class Error : public std::runtime_error {
   explicit Error(const std::string& msg)
     : std::runtime_error(msg) { }
 
- protected:
-  // Handle error, return bool indicating handle succeed
-  virtual bool Handle() const;
+  // Handle error
+  virtual void Handle() const;
 };
 
 // Handle for input error in stream is
 class BadInput : public Error {
  public:
   BadInput(const std::string& msg, std::istream& is)
-    : Error(msg), input_stream(is) { }
+    : Error(msg), input_stream_(is) { }
 
   // Handle error in input_stream
-  bool Handle() const override;
+  void Handle() const override;
 
  private:
-  std::istream& input_stream;
+  std::istream& input_stream_;
 };
 
 } // my_dictionary

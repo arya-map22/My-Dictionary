@@ -38,35 +38,35 @@ class Word {
   // Construct Word from string and initialize its name
   // *explicit constructor
   explicit Word(const std::string& wn)
-    : name(wn) { }
+    : name_(wn) { }
 
   // Construct Word from string and WordClass enumerator
   // initialize its name and classification
   Word(const std::string& wn, WordClass wc)
-    : name(wn), classification(wc) { }
+    : name_(wn), classification_(wc) { }
 
   // Construct Word from string and int
   // initialize its name and classification (from int)
   Word(const std::string& wn, int wc);
 
-  std::string get_name() const { return name; }
-  void set_name(const std::string& wn) { name = wn; }
+  std::string get_name() const { return name_; }
+  void set_name(const std::string& wn) { name_ = wn; }
 
   std::string get_meanings() const;           // Return formatted meanings in string
-  void AddMeaning(const std::string& wm);     // Add new meaning, check if meaning already exists
-  void RemoveMeaning(const std::string& wm);  // Remove meaning, check if meaning exists or not
+  void AddMeaning(const std::string& wm);     // Add new meaning, throw Error if meaning already exists
+  void RemoveMeaning(const std::string& wm);  // Remove meaning, throw Error if meaning exists or not
 
-  WordClass get_class() const { return classification; }
-  void set_class(WordClass wc) { classification = wc; }
+  WordClass get_class() const { return classification_; }
+  void set_class(WordClass wc) { classification_ = wc; }
 
   int WordClassToInt() const;         // Return Word::WordClass as int
   std::string WordClassToStr() const; // Return Word::Wordclass as string
 
  private:
-  std::string name;
-  std::vector<std::string> meanings;              // Support multiple meaning
-  WordClass classification;                       // Representing word-class
-  bool MeaningExist(const std::string& m) const;  // Check if meaning m exist
+  std::string name_;
+  std::vector<std::string> meanings_;              // Support multiple meaning
+  WordClass classification_;                       // Representing word-class
+  bool MeaningExist(const std::string& wm) const;  // Check if meaning m exist
 };
 
 // Print formatted (human read) Word to os, return os

@@ -21,38 +21,38 @@ namespace my_dictionary {
 // Construct Word from string and int
 // initialize its name and classification (from int)
 Word::Word(const std::string& wn, int wc)
-  : name(wn), classification(IntToWordClass(wc)) { }
+  : name_(wn), classification_(IntToWordClass(wc)) { }
 
-// Check if meaning m already exist
-bool Word::MeaningExist(const std::string& m) const { 
-  // Find meaning m in the meanings vector
-  if (std::find(meanings.cbegin(), meanings.cend(), m) ==
-      meanings.cend()) {
+// Check if meaning wm already exist
+bool Word::MeaningExist(const std::string& wm) const { 
+  // Find meaning wm in the meanings vector
+  if (std::find(meanings_.cbegin(), meanings_.cend(), wm) ==
+      meanings_.cend()) {
     return false;   // Meaning m not found
   } else {
     return true;
   }
 }
 
-// Add meaning m to Word
-// Check if meaning m already exist
-void Word::AddMeaning(const std::string& m) {
+// Add meaning wm to Word
+// Throw Error if meaning wm already exist
+void Word::AddMeaning(const std::string& wm) {
   // Check if meaning m already exist
-  if (MeaningExist(m)) 
-    throw Error("Meaning \""+m+"\" already in word \""+name+"\"");  // Throw Error
+  if (MeaningExist(wm)) 
+    throw Error("Meaning \""+wm+"\" already in word \""+name_+"\"");  // Throw Error
   
-  meanings.push_back(m);  // Add meaning m
+  meanings_.push_back(wm);  // Add meaning m
 }
 
-// Remove meaning m from word
-// Check if meaning m exist or not
-void Word::RemoveMeaning(const std::string& m) {
-  for (auto it = meanings.cbegin(); it != meanings.cend(); ++it) {
-    if (*it == m) meanings.erase(it);  // Remove meaning m
+// Remove meaning wm from word
+// Throw Error if meaning wm doesn't exist
+void Word::RemoveMeaning(const std::string& wm) {
+  for (auto it = meanings_.cbegin(); it != meanings_.cend(); ++it) {
+    if (*it == wm) meanings_.erase(it);  // Remove meaning m
     return;
   }
   // Meaning m doesn't exist, throw Error
-  throw Error("Meaning \""+m+"\" doesn't exist in word \""+name+"\"");
+  throw Error("Meaning \""+wm+"\" doesn't exist in word \""+name_+"\"");
 }
 
 /* Return formatted meanings in string
@@ -65,8 +65,8 @@ std::string Word::get_meanings() const {
   std::ostringstream oss;   // Output string stream
 
   // Write formatted meanings to output string stream
-  for (const auto& m : meanings) {
-    oss << std::setw(4) << "- " << m << "\n";
+  for (const auto& wm : meanings_) {
+    oss << std::setw(4) << "- " << wm << "\n";
   }
 
   return oss.str();
@@ -76,7 +76,7 @@ std::string Word::get_meanings() const {
 // kVerb == "Verb", kNoun == "Noun"
 // kAdjective == "Adjective", kAdverb == "Adverb"
 std::string Word::WordClassToStr() const {
-  switch (classification) {
+  switch (classification_) {
     case Word::WordClass::kVerb:
       return "Verb";
     case Word::WordClass::kNoun:
@@ -111,7 +111,7 @@ std::ostream& PrintWord(const Word& w, std::ostream& os) {
 // kVerb == 1, kNoun == 2
 // kAdjective == 3, kAdverb == 4
 int Word::WordClassToInt() const {
-  switch (classification) {
+  switch (classification_) {
     case Word::WordClass::kVerb:
       return 1;
     case Word::WordClass::kNoun:
@@ -135,14 +135,14 @@ std::ostream& operator<<(std::ostream& os, const Word& w) {
   std::ostringstream oss;   // Output string stream
   
   // Print word-name and word-class
-  oss << "{ " << w.name << " : " << w.WordClassToInt()
+  oss << "{ " << w.name_ << " : " << w.WordClassToInt()
     << " :\n  ( ";
 
   // Print meanings
-  for (decltype(w.meanings.size()) ind = 0;
-        ind != w.meanings.size(); ++ind) {
-    oss << w.meanings[ind];
-    if (ind != w.meanings.size()-1) {   // Not last meaning
+  for (decltype(w.meanings_.size()) ind = 0;
+        ind != w.meanings_.size(); ++ind) {
+    oss << w.meanings_[ind];
+    if (ind != w.meanings_.size()-1) {   // Not last meaning
       oss << " : ";   // Print separator
     }
   }
@@ -261,20 +261,20 @@ std::istream& operator>>(std::istream& is, Word& w) {
   if (sep != '}')
     throw BadInput("Bad end of Word", is);
 
-  w.name = rw.name; // Copy name from Reading to Word
+  w.name_ = rw.name; // Copy name from Reading to Word
 
   // Copy meanings from Reading to Word
   // Skip for the same meaning
   meaning.clear();
-  for (const auto& m : rw.meanings) {
-    if (meaning == m) continue;
-    w.meanings.push_back(m);
-    meaning = m;
+  for (const auto& wm : rw.meanings) {
+    if (meaning == wm) continue;
+    w.meanings_.push_back(wm);
+    meaning = wm;
   }
-  std::sort(w.meanings.begin(), w.meanings.end());  // Sort meanings
+  std::sort(w.meanings_.begin(), w.meanings_.end());  // Sort meanings
 
   // Copy classification from Reading to Word
-  w.classification = rw.classification;
+  w.classification_ = rw.classification;
   return is;
 }
 

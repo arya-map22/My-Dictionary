@@ -28,17 +28,25 @@ class Dictionary {
   using size_type = std::map<std::string, Word>::size_type;
 
   Dictionary() = default;   // Synthetized default constructor
-  Dictionary(std::initializer_list<Word> lst);  // Build dictionary from several Words
+
+  // Construct dictionary with name dn
+  Dictionary(const::std::string& dn) : dict_name_(dn) { }
+
+  // Return the name of dictionary
+  std::string get_name() const { return dict_name_; }
+
+  // Change the name of dictionary to s
+  void set_name(const std::string& s) { dict_name_ = s; }
 
   // Return the number of Words
-  size_type WordCount() const { return words.size(); }
+  size_type WordCount() const { return words_.size(); }
 
   // Return reference to Word at word-name w
-  // Throw exeption if w not found
+  // Throw Error if w not found
   Word& get_word(const std::string& w);
 
   // Return const reference to Word at word-name w
-  // Throw exeption if w not found
+  // Throw Error if w not found
   const Word& get_word(const std::string& w) const;
 
   // Add Word w, throw Error if w already exist
@@ -48,7 +56,8 @@ class Dictionary {
   void RemoveWord(const std::string& w);
 
  private:
-  std::map<std::string, Word> words;          // (key : word-name, value : Word)
+  std::string dict_name_{"dictionary"};       // Name of dictionary
+  std::map<std::string, Word> words_;         // (key : word-name, value : Word)
   bool WordExist(const std::string& w) const; // Check if Word w exist or not
 };
 
