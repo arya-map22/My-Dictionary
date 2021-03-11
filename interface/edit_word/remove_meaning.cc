@@ -53,6 +53,9 @@ void RemoveMeaning(Word& w) {
         e.Handle();
         --meanings_count;
         meanings_removed.pop_back();
+        WaitForButton();
+        ClearScreen();
+        std::cout << "\n\nEnter meanings to remove (1 meaning per line | '.' to finish) :\n"; 
       }
     }
   }
@@ -62,6 +65,7 @@ void RemoveMeaning(Word& w) {
   for (const auto& wm : meanings_removed) {
     std::cout << std::setw(4) << "- " << wm << "\n";
   }
+  ClearNewline();
   WaitForButton();
 }
 

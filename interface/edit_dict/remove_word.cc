@@ -25,16 +25,21 @@ void RemoveWord(Dictionary& dict) {
   // Prompt user to input word-name
   std::cout << "\n\nEnter word-name : ";
   std::string word_name;
-  std::cin.ignore();  // Ignore previous newline
+  ClearNewline();   // Ignore previous newline
   std::getline(std::cin, word_name);
   if (!std::cin)
     throw BadInput("Error while reading input from user", std::cin);
 
-  dict.RemoveWord(word_name);     // Remove word from dict
+  try {
+    dict.RemoveWord(word_name);     // Remove word from dict
 
-  // Report removed word
-  std::cout << "\n\nWord \"" << word_name << "\" removed";
-  WaitForButton();
+    // Report removed word
+    std::cout << "\n\nWord \"" << word_name << "\" removed";
+    WaitForButton();
+  } catch (Error& e) {
+    e.Handle();
+    WaitForButton();
+  }
 }
 
 } // my_dictionary

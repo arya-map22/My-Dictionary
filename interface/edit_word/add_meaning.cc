@@ -53,6 +53,9 @@ void AddMeaning(Word& w) {
         e.Handle();
         --meanings_count;
         meanings_added.pop_back();
+        WaitForButton();
+        ClearScreen();
+        std::cout << "\n\nEnter new meanings (1 meaning per line | '.' to finish) :\n";
       }
     }
   }
@@ -62,6 +65,7 @@ void AddMeaning(Word& w) {
   for (const auto& wm : meanings_added) {
     std::cout << std::setw(4) << "- " << wm << "\n";
   }
+  ClearNewline();
   WaitForButton();
 }
 

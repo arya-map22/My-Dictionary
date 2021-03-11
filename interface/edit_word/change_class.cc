@@ -40,6 +40,7 @@ void ChangeClass(Word& w) {
   std::cout << "\n\nOld class : " << old_word_class
             << "\nNew class : " << w.WordClassToStr()
             << "\n";
+  ClearNewline();
   WaitForButton();
 }
 

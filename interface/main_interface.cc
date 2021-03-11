@@ -96,6 +96,7 @@ void ShowQuickList(const Dictionary& dict) {
   ShowDictionary(dict, std::cout);
   std::cout << "\nDictionary : " << dict.get_name()
             << "\nWord       : " << dict.WordCount() << " words\n";
+  ClearNewline();
   WaitForButton();
 }
 
@@ -113,19 +114,28 @@ void ShowCompleteList(const Dictionary& dict) {
   PrintDictionary(dict, std::cout);
   std::cout << "\nDictionary : " << dict.get_name()
             << "\nWord       : " << dict.WordCount() << " words\n";
+  ClearNewline();
   WaitForButton();
 }
 
 // Prompt user for word-name and show its content from dictionary dict
 // Throw Error if word-name doesn't exist
 void FindAWord(const Dictionary& dict) {
-  ClearScreen();
-  std::string word_name;
-  std::cout << "Enter word-name : ";
-  std::cin.ignore();  // Ignore previous newline
-  std::getline(std::cin, word_name);
-  PrintWord(dict.get_word(word_name), std::cout);
-  WaitForButton();
+  try {
+    ClearScreen();
+    std::string word_name;
+    std::cout << "Enter word-name : ";
+    ClearNewline();   // Ignore previous newline
+    std::getline(std::cin, word_name);
+    if (!std::cin)
+      throw BadInput("Error while reading input from user", std::cin);
+
+    PrintWord(dict.get_word(word_name), std::cout);
+    WaitForButton();
+  } catch (Error& e) {
+    e.Handle();
+    WaitForButton();
+  }
 }
 
 // Print good bye message and exit program
@@ -175,8 +185,17 @@ void EditDict(Dictionary& dict) {
           {
             std::cout << "\n\nEnter word-name to edit : ";
             std::string word_name;
+            ClearNewline();   // Ignore previous newline
             std::getline(std::cin, word_name);
-            EditWord(dict.get_word(word_name));
+            if (!std::cin)
+              throw BadInput("Error while reading input from user", std::cin);  
+
+            try {
+              EditWord(dict.get_word(word_name));
+            } catch (Error& e) {
+              e.Handle();
+              WaitForButton();
+            }
           }
           break;
         case '4':
@@ -189,6 +208,11 @@ void EditDict(Dictionary& dict) {
       }
     } catch (Error& e) {
       e.Handle();
+      ClearNewline();
+      WaitForButton();
+    } catch (BadInput& e) {
+      e.Handle();
+      WaitForButton();
     }
   }
 }
@@ -233,6 +257,7 @@ void EditWord(Word& w) {
           break;
         case '5':
           PrintWord(w, std::cout) << "\n";
+          ClearNewline();
           WaitForButton();
           break;
         case kExit:
@@ -242,9 +267,13 @@ void EditWord(Word& w) {
       }
     } catch (Error& e) {
       e.Handle();
+      ClearNewline();
+      WaitForButton();
+    } catch (BadInput& e) {
+      e.Handle();
+      WaitForButton();
     }
   }
 }
 
-}
- // my_dictionary
+} // my_dictionary

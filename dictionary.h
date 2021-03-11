@@ -12,7 +12,6 @@
 
 #include "my_dictionary/word.h"
 
-#include <initializer_list>
 #include <iostream>
 #include <map>
 #include <string>

@@ -23,11 +23,11 @@ namespace my_dictionary {
 void AddWord(Dictionary& dict) {
   ClearScreen();
   std::cout << "Adding word to dictionary \"" << dict.get_name() << "\"";
-  
+
   // Prompt user to input word-name
   std::cout << "\n\nEnter a new word-name : ";
   std::string word_name;
-  std::cin.ignore();  // Ignore previous newline
+  ClearNewline();   // Ignore previous newline
   std::getline(std::cin, word_name);
   if (!std::cin)
     throw BadInput("Error while reading input from user", std::cin);
@@ -37,9 +37,9 @@ void AddWord(Dictionary& dict) {
             << "\n1 = Verb; 2 = Noun; 3 = Adjective; 4 = Adverb"
             << "\n: ";
   int word_class{};
+  std::cin >> word_class;
   if (!std::cin)
     throw BadInput("Error while reading input from user", std::cin);
-  std::cin >> word_class;
 
   Word new_word(word_name, word_class);   // A new word
 
@@ -65,16 +65,27 @@ void AddWord(Dictionary& dict) {
         new_word.AddMeaning(word_meaning);
       } catch (Error& e) {
         e.Handle();
+        WaitForButton();
+        ClearScreen();
+        std::cout << "\nEnter word-meanings (1 meaning per line | '.' to finish) :\n";
       }
     }
   }
 
-  dict.AddWord(new_word);    // Add a new word to dict
+  try {
+    dict.AddWord(new_word);    // Add a new word to dict
 
-  // Report added word
-  std::cout << "\n\nAdded word :\n";
-  PrintWord(new_word, std::cout) << "\n";
-  WaitForButton();
+    // Report added word
+    std::cout << "\n\nAdded word :"
+              << "\n* ";
+    PrintWord(new_word, std::cout) << "\n";
+    ClearNewline();
+    WaitForButton();
+  } catch (Error& e) {
+    e.Handle();
+    ClearNewline();
+    WaitForButton();
+  }
 }
 
 } // my_dictionary

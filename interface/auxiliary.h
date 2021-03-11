@@ -12,9 +12,15 @@
 #include <string>
 
 namespace my_dictionary {
+
+// Read up to newline (discard newline)
+inline void ClearNewline() {
+  char ch{};
+  while (std::cin.get(ch) && ch != '\n') { }
+}
+
 // Wait for user's respond
 inline void WaitForButton() {
-  std::cin.ignore();    // Ignore previous newline
   std::cout << "\nPress Enter to continue!";
   char ch{};
   while (std::cin.get(ch) && ch != '\n') { }  // Read up to newline

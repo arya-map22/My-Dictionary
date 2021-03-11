@@ -28,7 +28,7 @@ void ChangeName(Word& w) {
   // Prompt user to input a new word-name
   std::cout << "\n\nEnter a new word-name : ";
   std::string new_word_name;
-  std::cin.ignore();  // Ignore previous newline
+  ClearNewline();   // Ignore previous newline
   std::getline(std::cin, new_word_name);
   if (!std::cin)
     throw BadInput("Error while reading input from user", std::cin);
