@@ -66,8 +66,7 @@ std::ostream& PrintDictionary(const Dictionary& dict, std::ostream& os) {
   std::ostringstream oss;       // Output string stream
   Dictionary::size_type cnt{1}; // The number of Word
   for (const auto& p : dict.words_) {
-    oss << std::setw(4) << std::left << cnt++ << ") " 
-        << std::setw(4);
+    oss << std::setw(3) << std::left << cnt++ << ") ";
     PrintWord(p.second, oss) << "\n";
   }
 
@@ -84,8 +83,8 @@ std::ostream& ShowDictionary(const Dictionary& dict, std::ostream& os) {
   std::ostringstream oss;       // Output string stream
   Dictionary::size_type cnt{1}; // The number of Word
   for (const auto& p : dict.words_) {
-    oss << std::setw(4) << std::left << cnt++ << ") "
-      << p.second.get_name() << std::setw(4)
+    oss << std::setw(3) << std::left << cnt++ << ") "
+      << p.second.get_name() << std::setw(4) << std::right
       <<"(" << p.second.WordClassToStr() << ")" << "\n";
   }
 

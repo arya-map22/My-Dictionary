@@ -7,6 +7,8 @@
 
 #include "my_dictionary/interface/edit_word/add_meaning.h"
 
+#include <cctype>
+
 #include <iomanip>
 #include <iostream>
 #include <string>
@@ -38,6 +40,17 @@ void AddMeaning(Word& w) {
       throw BadInput("Error while reading input from user", std::cin);
     } else if (opt == kFinishAdding) {
       break;
+    } else if (!std::isalpha(opt)) {  // If start of word-meaning isn't alphabet then throw BadInput
+      try {
+        std::cin.clear(std::ios_base::failbit);
+        throw BadInput("Start of word-meaning must be an alphabet", std::cin);
+      } catch (BadInput& e) {
+        e.Handle();
+        WaitForButton();
+        ClearScreen();
+        std::cout << "\nEnter word-meanings (1 meaning per line | '.' to finish) :\n";
+        continue;   // Start from the beginning of loop
+      } 
     } else {
       std::cin.unget();
       std::getline(std::cin, word_meaning);

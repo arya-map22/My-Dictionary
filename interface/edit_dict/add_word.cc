@@ -7,6 +7,8 @@
 
 #include "my_dictionary/interface/edit_dict/add_word.h"
 
+#include <cctype>
+
 #include <iostream>
 #include <string>
 
@@ -27,8 +29,22 @@ void AddWord(Dictionary& dict) {
   // Prompt user to input word-name
   std::cout << "\n\nEnter a new word-name : ";
   std::string word_name;
+  char first_word{};
+  
   ClearNewline();   // Ignore previous newline
-  std::getline(std::cin, word_name);
+  std::cin >> first_word;
+  if (!std::cin)
+    throw BadInput("Error while reading input from user", std::cin);
+
+  // If start of word-name isn't an alphabet then throw BadInput
+  if (!std::isalpha(first_word)) {
+    std::cin.clear(std::ios_base::failbit);
+    throw BadInput("Start of word-name must be an alphabet", std::cin);
+  } else {
+    std::cin.unget();   // Putback readed char
+  }
+
+  std::getline(std::cin, word_name);  // Read the word-name
   if (!std::cin)
     throw BadInput("Error while reading input from user", std::cin);
 
@@ -54,6 +70,17 @@ void AddWord(Dictionary& dict) {
       throw BadInput("Error while reading input from user", std::cin);
     } else if (opt == kFinishAdding) {
       break;
+    } else if (!std::isalpha(opt)) {  // If start of word-meaning isn't an alphabet then throw BadInput
+      try {
+        std::cin.clear(std::ios_base::failbit);
+        throw BadInput("Start of word-meaning must be an alphabet", std::cin);
+      } catch (BadInput& e) {
+        e.Handle();
+        WaitForButton();
+        ClearScreen();
+        std::cout << "\nEnter word-meanings (1 meaning per line | '.' to finish) :\n";
+        continue;   // Start from the beginning of loop
+      }
     } else {
       std::cin.unget();
       std::getline(std::cin, word_meaning);

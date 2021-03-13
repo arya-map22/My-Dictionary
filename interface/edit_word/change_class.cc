@@ -23,7 +23,8 @@ void ChangeClass(Word& w) {
   ClearScreen();
   std::cout << "Changing the classification of word \"" << w.get_name() << "\"";
 
-  std::string old_word_class{w.WordClassToStr()};  // Old classification
+  const Word::WordClass old_word_class{w.get_class()};  // Old classification
+  const std::string old_word_class_str{w.WordClassToStr()}; // Old classification as string
 
   // Prompt user to choose new word-class
   std::cout << "\n\nChoose a new word-class :"
@@ -34,10 +35,13 @@ void ChangeClass(Word& w) {
   if (!std::cin)
     throw BadInput("Error while reading input from user", std::cin);
 
-  w.set_class(IntToWordClass(new_word_class));  // Change word-class to new_word_class
+  if (IntToWordClass(new_word_class) == old_word_class)
+    throw Error("The new word-class can't be same with the old word-class");
+  else
+    w.set_class(IntToWordClass(new_word_class));  // Change word-class to new_word_class
 
   // Report changed class
-  std::cout << "\n\nOld class : " << old_word_class
+  std::cout << "\n\nOld class : " << old_word_class_str
             << "\nNew class : " << w.WordClassToStr()
             << "\n";
   ClearNewline();
