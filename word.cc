@@ -66,7 +66,7 @@ std::string Word::get_meanings() const {
 
   // Write formatted meanings to output string stream
   for (const auto& wm : meanings_) {
-    oss << std::setw(4) << "- " << wm << "\n";
+    oss << std::setw(6) << "- " << wm << "\n";
   }
 
   return oss.str();

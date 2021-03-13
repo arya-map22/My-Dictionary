@@ -7,7 +7,6 @@
 
 #include "my_dictionary/dictionary.h"
 
-#include <initializer_list>
 #include <iomanip>
 #include <iostream>
 #include <map>
@@ -37,7 +36,9 @@ Word& Dictionary::get_word(const std::string& w) {
 // Return const reference to Word at word-name w
 // Throw Error if w not found
 const Word& Dictionary::get_word(const std::string& w) const {
-  return const_cast<const Word&>(get_word(w));
+  if (!WordExist(w))
+    throw Error("Word \""+w+"\" doesn't exist");
+  return words_.at(w);
 }
 
 // Add Word w, throw Error if w already exist
@@ -65,7 +66,7 @@ std::ostream& PrintDictionary(const Dictionary& dict, std::ostream& os) {
   std::ostringstream oss;       // Output string stream
   Dictionary::size_type cnt{1}; // The number of Word
   for (const auto& p : dict.words_) {
-    oss << cnt++ << ")" << std::setw(4);
+    oss << std::setw(3) << std::left << cnt++ << ") ";
     PrintWord(p.second, oss) << "\n";
   }
 
@@ -82,9 +83,9 @@ std::ostream& ShowDictionary(const Dictionary& dict, std::ostream& os) {
   std::ostringstream oss;       // Output string stream
   Dictionary::size_type cnt{1}; // The number of Word
   for (const auto& p : dict.words_) {
-    oss << cnt++ << ")" << std::setw(4)
-      << p.second.get_name() << std::setw(3)
-      << p.second.WordClassToStr() << "\n";
+    oss << std::setw(3) << std::left << cnt++ << ") "
+      << p.second.get_name() << std::setw(4) << std::right
+      <<"(" << p.second.WordClassToStr() << ")" << "\n";
   }
 
   os << oss.str();  // Write to os

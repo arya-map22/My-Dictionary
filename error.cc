@@ -9,20 +9,17 @@
 
 #include <iostream>
 
-#include "my_dictionary/interface/auxiliary.h"
-
 namespace my_dictionary {
 
 // Only display error message
 void Error::Handle() const {
-  std::cerr << "Error : " << what() << std::endl;
-  WaitForButton();
+  std::cerr << "\nError : " << what() << std::endl;
 }
 
 // Clear the state of input_stream,
 // if badbit set for input_stream then exit program
 void BadInput::Handle() const {
-  std::cerr << "BadInput : " << what() << std::endl;
+  std::cerr << "\nBadInput : " << what() << std::endl;
 
   // If input_stream corrupt give up
   if (input_stream_.bad()) {
@@ -32,7 +29,8 @@ void BadInput::Handle() const {
   }
 
   input_stream_.clear();   // Clear the state of input_stream
-  WaitForButton();
+  char ch{};
+  while (input_stream_.get(ch) && ch != '\n') { }  // Discard up to newline
 }
 
 } // my_dictionary

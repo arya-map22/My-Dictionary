@@ -21,17 +21,17 @@ class Error : public std::runtime_error {
     : std::runtime_error(msg) { }
 
   // Handle error
-  virtual void Handle() const;
+  void Handle() const;
 };
 
-// Handle for input error in stream is
-class BadInput : public Error {
+// Handle for input error in istream is
+class BadInput : public std::runtime_error {
  public:
   BadInput(const std::string& msg, std::istream& is)
-    : Error(msg), input_stream_(is) { }
+    : std::runtime_error(msg), input_stream_(is) { }
 
   // Handle error in input_stream
-  void Handle() const override;
+  void Handle() const;
 
  private:
   std::istream& input_stream_;
