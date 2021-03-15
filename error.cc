@@ -33,4 +33,11 @@ void BadInput::Handle() const {
   while (input_stream_.get(ch) && ch != '\n') { }  // Discard up to newline
 }
 
+// Display error message then exit program
+void FileError::Handle() const {
+  std::cerr << "\nFileError : " << what() 
+            << "\nIn file   : " << file_name_<< std::endl;
+  exit(EXIT_FAILURE);   // Exit program
+}
+
 } // my_dictionary

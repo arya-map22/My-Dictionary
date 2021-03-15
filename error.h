@@ -8,6 +8,7 @@
 #ifndef MY_DICTIONARY_ERROR_H_
 #define MY_DICTIONARY_ERROR_H_
 
+#include <fstream>
 #include <iostream>
 #include <stdexcept>
 #include <string>
@@ -35,6 +36,19 @@ class BadInput : public std::runtime_error {
 
  private:
   std::istream& input_stream_;
+};
+
+// Handle I/O error in file
+class FileError : public std::runtime_error {
+ public:
+  FileError(const std::string& msg, const std::string& fn)
+    : std::runtime_error(msg), file_name_(fn) { }
+
+  // Handle error
+  void Handle() const; 
+
+ private:
+  std::string file_name_;
 };
 
 } // my_dictionary
