@@ -18,7 +18,7 @@
 namespace my_dictionary {
 
 // Load the contents of dictionary dict from file file_name
-void LoadDictFromFile(Dictionary& dict, const std::string& file_name = dict.);
+void LoadDictFromFile(Dictionary& dict, const std::string& file_name);
 
 // Save the contents of dictionary dict to file file_name
 void SaveDictToFile(const Dictionary& dict, const std::string& file_name);

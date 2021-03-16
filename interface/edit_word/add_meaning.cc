@@ -18,6 +18,7 @@
 #include "my_dictionary/word.h"
 
 #include "my_dictionary/interface/auxiliary.h"
+#include "my_dictionary/interface/edit.h"
 
 namespace my_dictionary {
 
@@ -27,54 +28,34 @@ void AddMeaning(Word& w) {
   ClearScreen();
   std::cout << "Adding meanings to word \"" << w.get_name() << "\"";
 
-  // Prompt user to input new meanings
-  std::cout << "\n\nEnter new meanings (1 meaning per line | '.' to finish) :\n"; 
-  static const char kFinishAdding{'.'};     // Finish adding
-  size_t meanings_count{0};                 // The number of meanings that successfully added
+  size_t meanings_added_count{0};           // The number of meanings that successfully added
   std::vector<std::string> meanings_added;  // All meanings that successfully added
+  
+  PromptForMeaning();
   while (true) {
-    char opt{};
-    std::string word_meaning;   // To read word-meaning
-    std::cin >> opt;
-    if (!std::cin) {
-      throw BadInput("Error while reading input from user", std::cin);
-    } else if (opt == kFinishAdding) {
-      break;
-    } else if (!std::isalpha(opt)) {  // If start of word-meaning isn't alphabet then throw BadInput
-      try {
-        std::cin.clear(std::ios_base::failbit);
-        throw BadInput("Start of word-meaning must be an alphabet", std::cin);
-      } catch (BadInput& e) {
-        e.Handle();
-        WaitForButton();
-        ClearScreen();
-        std::cout << "\nEnter word-meanings (1 meaning per line | '.' to finish) :\n";
-        continue;   // Start from the beginning of loop
-      } 
-    } else {
-      std::cin.unget();
-      std::getline(std::cin, word_meaning);
-      if (!std::cin)
-        throw BadInput("Error while reading input from user", std::cin);
+    std::string word_meaning;
+    int get_word_meaning{GetWordMeaning(word_meaning)};
 
-      // Add word_meaning to w
-      try {
-        w.AddMeaning(word_meaning);
-        ++meanings_count;
-        meanings_added.push_back(word_meaning);
-      } catch (Error& e) {
-        e.Handle();
-        --meanings_count;
-        meanings_added.pop_back();
-        WaitForButton();
-        ClearScreen();
-        std::cout << "\n\nEnter new meanings (1 meaning per line | '.' to finish) :\n";
-      }
+    if (get_word_meaning == kBreak) break;
+    else if (get_word_meaning == kContinue) continue;
+
+    // Add word_meaning to w
+    try {
+      w.AddMeaning(word_meaning);
+      ++meanings_added_count;
+      meanings_added.push_back(word_meaning);
+    } catch (Error& e) {
+      e.Handle();
+      --meanings_added_count;
+      meanings_added.pop_back();
+      WaitForButton();
+      ClearScreen();
+      PromptForMeaning();
     }
   }
 
   // Report added meanings
-  std::cout << "\n\n" << meanings_count << " meanings added :\n";
+  std::cout << "\n\n" << meanings_added_count << " meanings added :\n";
   for (const auto& wm : meanings_added) {
     std::cout << std::setw(4) << "- " << wm << "\n";
   }

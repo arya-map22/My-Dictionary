@@ -14,6 +14,7 @@
 #include "my_dictionary/word.h"
 
 #include "my_dictionary/interface/auxiliary.h"
+#include "my_dictionary/interface/edit.h"
 
 namespace my_dictionary {
 
@@ -25,26 +26,8 @@ void ChangeName(Word& w) {
 
   const std::string old_word_name{w.get_name()};  // Old name
 
-  // Prompt user to input a new word-name
-  std::cout << "\n\nEnter a new word-name : ";
   std::string new_word_name;
-  char first_word{};
-  ClearNewline();   // Ignore previous newline
-  std::cin >> first_word;
-  if (!std::cin)
-    throw BadInput("Error while reading input from user", std::cin);
-
-  // If start of word-name isn't an alphabet then throw BadInput
-  if (!std::isalpha(first_word)) {
-    std::cin.clear(std::ios_base::failbit);
-    throw BadInput("Start of word-name must be an alphabet", std::cin);
-  } else {
-    std::cin.unget();   // Putback readed char
-  }
-
-  std::getline(std::cin, new_word_name);
-  if (!std::cin)
-    throw BadInput("Error while reading input from user", std::cin);
+  GetWordName(new_word_name);
 
   if (new_word_name == old_word_name)
     throw Error("The new word-name can't be same with the old word-name");

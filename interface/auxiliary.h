@@ -11,6 +11,8 @@
 #include <iostream>
 #include <string>
 
+#include "my_dictionary/error.h"
+
 namespace my_dictionary {
 
 // Read up to newline (discard newline)
@@ -29,6 +31,14 @@ inline void WaitForButton() {
 // Clear screen (print 50 newlines)
 inline void ClearScreen() {
   std::cout << std::string(50, '\n');
+}
+
+// Check the state of istream is after reading from is
+// Throw BadInput with error message msg if is not in good state
+inline void CheckIstream(std::istream& is = std::cin, 
+                         const std::string& msg = "Error while reading input from user") {
+  if (!is)
+    throw BadInput(msg, is);
 }
 
 } // my_dictionary

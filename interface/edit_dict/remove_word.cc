@@ -12,7 +12,9 @@
 
 #include "my_dictionary/dictionary.h"
 #include "my_dictionary/error.h"
+
 #include "my_dictionary/interface/auxiliary.h"
+#include "my_dictionary/interface/edit.h"
 
 namespace my_dictionary {
 
@@ -22,16 +24,13 @@ void RemoveWord(Dictionary& dict) {
   ClearScreen();
   std::cout << "Removing word from dictionary \"" << dict.get_name() << "\"";
 
-  // Prompt user to input word-name
-  std::cout << "\n\nEnter word-name : ";
   std::string word_name;
-  ClearNewline();   // Ignore previous newline
-  std::getline(std::cin, word_name);
-  if (!std::cin)
-    throw BadInput("Error while reading input from user", std::cin);
+  GetWordName(word_name);
 
   try {
     dict.RemoveWord(word_name);     // Remove word from dict
+    if (!dict.Modified())
+      dict.set_mod(true);
 
     // Report removed word
     std::cout << "\n\nWord \"" << word_name << "\" removed";

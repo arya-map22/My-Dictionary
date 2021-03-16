@@ -26,11 +26,11 @@ class Dictionary {
  public:
   using size_type = std::map<std::string, Word>::size_type;
 
-  // Construct dictionary with name dn
-  Dictionary(const::std::string& dn) 
-    : dict_name_(dn), file_name_("") { }
+  Dictionary() = default;   // Default synthetized constructor
 
-  
+  // Construct dictionary with name dn
+  Dictionary(const::std::string& dn) : dict_name_(dn) { }
+
   // Return the name of dictionary
   std::string get_name() const { return dict_name_; }
 
@@ -55,16 +55,13 @@ class Dictionary {
   void RemoveWord(const std::string& w);
 
   // Get modification state of Dictionary
-  bool get_mod() const { return modified_; }
+  bool Modified() const { return modified_; }
 
   // Set modification state of Dictionary
   void set_mod(bool b) { modified_ = b; }
 
-  std::string get_file_name() const { return file_name_; };
-
  private:
   std::string dict_name_{"dictionary"};       // Name of dictionary
-  const std::string file_name_;
   std::map<std::string, Word> words_;         // (key : word-name, value : Word)
   bool modified_{false};                      // Dictionary has been modified or not
   bool WordExist(const std::string& w) const; // Check if Word w exist or not
