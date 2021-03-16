@@ -36,8 +36,8 @@ void AddWord(Dictionary& dict) {
   Word new_word(word_name, word_class);   // A new word
 
   PromptForMeaning();
+  std::string word_meaning;
   while (true) {
-    std::string word_meaning;
     int get_word_meaning{GetWordMeaning(word_meaning)};
 
     if (get_word_meaning == kBreak) break;
@@ -54,10 +54,10 @@ void AddWord(Dictionary& dict) {
     }
   }
 
+  new_word.SortMeaning();   // Maintain lexicographical order for meanings
+
   try {
     dict.AddWord(new_word);    // Add a new word to dict
-    if (!dict.Modified())
-      dict.set_mod(true);
 
     // Report added word
     std::cout << "\n\nAdded word :"

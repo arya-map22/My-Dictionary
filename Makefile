@@ -2,7 +2,7 @@ VPATH = ./interface:./interface/edit_dict:./interface/edit_word
 
 objects = dictionary.o error.o word.o main.o \
 	main_interface.o edit.o \
-	add_word.o remove_word.o \
+	add_word.o remove_word.o save_modification.o \
 	add_meaning.o remove_meaning.o change_name.o change_class.o
 
 CXXFLAGS = -iquote /home/map22/PROGRAMMING/C++\ Project/ -std=c++11 -Wall -Wextra -Werror -g
@@ -25,7 +25,8 @@ word.o: word.cc word.h error.h
 	${g++_compile} -c $< -o $@
 
 main_interface.o: main_interface.cc main_interface.h dictionary.h error.h auxiliary.h edit.h \
-		add_word.h remove_word.h add_meaning.h change_name.h change_class.h remove_meaning.h
+		add_word.h remove_word.h save_modification.h \
+		add_meaning.h change_name.h change_class.h remove_meaning.h
 	${g++_compile} -c $< -o $@
 
 edit.o: edit.cc edit.h dictionary.h error.h word.h auxiliary.h
@@ -35,6 +36,9 @@ add_word.o: add_word.cc add_word.h auxiliary.h
 	${g++_compile} -c $< -o $@
 
 remove_word.o: remove_word.cc remove_word.h dictionary.h error.h auxiliary.h
+	${g++_compile} -c $< -o $@
+
+save_modification.o: save_modification.cc save_modification.h dictionary.h error.h auxiliary.h
 	${g++_compile} -c $< -o $@
 
 add_meaning.o: add_meaning.cc add_meaning.h auxiliary.h error.h word.h

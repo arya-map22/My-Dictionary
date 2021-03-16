@@ -32,6 +32,7 @@
 
 #include "my_dictionary/interface/edit_dict/add_word.h"
 #include "my_dictionary/interface/edit_dict/remove_word.h"
+#include "my_dictionary/interface/edit_dict/save_modification.h"
 
 #include "my_dictionary/interface/edit_word/add_meaning.h"
 #include "my_dictionary/interface/edit_word/change_name.h"
@@ -40,12 +41,12 @@
 
 namespace my_dictionary {
 
-Dictionary my_dict("my_dictionary");   // Dictionary used through program
+Dictionary my_dict("my_dict.txt");
 
 // Show menu for my_dictionary program
 void ShowMenu() {
   ClearScreen();
-  std::cout << "******************| Welcome to my_dictionary v1.0! |******************"
+  std::cout << "******************| Welcome to my_dictionary v1.1! |******************"
             << "\n\nMain menu : "
             << "\n1.) Show quick list"
             << "\n2.) Show complete list"
@@ -127,6 +128,7 @@ void FindAWord(const Dictionary& dict) {
     std::string word_name;
     GetWordName(word_name);
 
+    std::cout << "\n* ";
     PrintWord(dict.get_word(word_name), std::cout);
     WaitForButton();
   } catch (Error& e) {
@@ -136,27 +138,43 @@ void FindAWord(const Dictionary& dict) {
 }
 
 // Print good bye message and exit program
+// Warn user if dictionary modified
 void ExitProgram() {
   ClearScreen();
-  std::cout << "***********| Thank you for using my_dictionary v1.0, see you! |**********\n"
+  if (my_dict.Modified()) {
+    std::cout << "Warning : you have unsaved modification"
+              << "\nDo you want to save before exit? (y/n) : ";
+    char opt{};
+    std::cin >> opt;
+    CheckIstream();
+    if (std::tolower(opt) == 'y')
+      SaveModification(my_dict);
+    else if (std::tolower(opt) != 'n')
+      throw Error("Invalid option");
+  }
+
+  ClearScreen();
+  std::cout << "***********| Thank you for using my_dictionary v1.1, see you! |**********\n"
             << "***********|              by M. Arya Prayoga                  |**********\n";
   exit(EXIT_SUCCESS);
 }
 
 /**************************************************************************************************/
 
-void EditWord(Word& w);
+void EditWord(Dictionary& dict);
 
 // Print menu for editting dictionary dict
 void ShowMenuEditDict(const Dictionary& dict) {
   ClearScreen();
-  std::cout << "Dictionary : " << dict.get_name()
-            << "\nWord       : " << dict.WordCount() << " words"
+  std::cout << "Dictionary    : " << dict.get_name()
+            << "\nWord          : " << dict.WordCount() << " words"
+            << "\nModified      : " << (dict.Modified() ? "Yes" : "No")
             << "\n\nMenu for editting dictionary : "
             << "\n1.) Add word"
             << "\n2.) Remove word"
             << "\n3.) Edit word"
-            << "\n4.) Preview dictionary"
+            << "\n4.) Save modification"
+            << "\n5.) Preview dictionary"
             << "\n\nEnter your option ('q' to quit editting dictionary) : ";
 }
 
@@ -173,24 +191,19 @@ void EditDict(Dictionary& dict) {
       switch (std::tolower(opt)) {
         case '1':
           AddWord(dict);
+          DictionaryModified(dict);
           break;
         case '2':
           RemoveWord(dict);
+          DictionaryModified(dict);
           break;
         case '3':
-          {
-            std::string word_name;
-            GetWordName(word_name);
-
-            try {
-              EditWord(dict.get_word(word_name));
-            } catch (Error& e) {
-              e.Handle();
-              WaitForButton();
-            }
-          }
+          EditWord(dict);
           break;
         case '4':
+          SaveModification(dict);
+          break;
+        case '5':
           ShowCompleteList(dict);
           break;
         case kExit:
@@ -225,7 +238,11 @@ void ShowMenuEditWord(const Word& w) {
 
 // Print menu for editiing word w and
 // perform spesific operation based on chosen option by user
-void EditWord(Word& w) {
+void EditWord(Dictionary& dict) {
+  std::string word_name;
+  GetWordName(word_name);
+
+  Word& w{dict.get_word(word_name)};
   while (true) {
     try {
       ShowMenuEditWord(w);
@@ -236,15 +253,19 @@ void EditWord(Word& w) {
       switch (std::tolower(opt)) {
         case '1':
           ChangeName(w);
+          DictionaryModified(dict);
           break;
         case '2':
           ChangeClass(w);
+          DictionaryModified(dict);
           break;
         case '3':
           AddMeaning(w);
+          DictionaryModified(dict);
           break;
         case '4':
           RemoveMeaning(w);
+          DictionaryModified(dict);
           break;
         case '5':
           ClearScreen();

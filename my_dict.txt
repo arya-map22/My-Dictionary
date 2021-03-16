@@ -1,0 +1,14 @@
+{ Exagerate : 4 :
+    ( melebih-lebihkan : melebih-lebihkan : cacat  )
+}
+{ Parole : 2 :
+    ( pembebasan bersyarat )
+}
+{
+  Beautiful person : 3 :
+    ( indah : cantik : orang yang cantik )
+}
+{
+  Slowly : 4 :
+    ( perlahan-lahan : secara perlahan )
+}

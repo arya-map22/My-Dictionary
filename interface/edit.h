@@ -27,7 +27,7 @@ void GetWordClass(int& word_class);
 // Get word-meanings from user and add them to new_word
 int GetWordMeaning(std::string& word_meaning);
 
-// Prompt for get word-meaning
+// Print prompt for user to input word-meaning
 inline void PromptForMeaning() {
   std::cout << "\nEnter word-meanings (1 meaning per line | "
             << kFinishEditMeaning << " to finish) :\n";

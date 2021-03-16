@@ -13,6 +13,7 @@
 #ifndef MY_DICTIONARY_WORD_H_
 #define MY_DICTIONARY_WORD_H_
 
+#include <algorithm>
 #include <iostream>
 #include <string>
 #include <vector>
@@ -61,6 +62,9 @@ class Word {
 
   int WordClassToInt() const;         // Return Word::WordClass as int
   std::string WordClassToStr() const; // Return Word::Wordclass as string
+
+  // Sort meanings in lexicographical order
+  void SortMeaning() { std::sort(meanings_.begin(), meanings_.end()); }
 
  private:
   std::string name_;

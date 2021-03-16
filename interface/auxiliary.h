@@ -8,9 +8,11 @@
 #ifndef MY_DICTIONARY_INTERFACE_AUXILIARY_H_
 #define MY_DICTIONARY_INTERFACE_AUXILIARY_H_
 
+#include <fstream>
 #include <iostream>
 #include <string>
 
+#include "my_dictionary/dictionary.h"
 #include "my_dictionary/error.h"
 
 namespace my_dictionary {
@@ -34,11 +36,16 @@ inline void ClearScreen() {
 }
 
 // Check the state of istream is after reading from is
-// Throw BadInput with error message msg if is not in good state
+// Throw BadInput with error message msg if is not in a good state
 inline void CheckIstream(std::istream& is = std::cin, 
                          const std::string& msg = "Error while reading input from user") {
   if (!is)
     throw BadInput(msg, is);
+}
+
+inline void DictionaryModified(Dictionary& dict) {
+  if (!dict.Modified())
+    dict.set_mod(true);
 }
 
 } // my_dictionary

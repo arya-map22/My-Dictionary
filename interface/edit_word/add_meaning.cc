@@ -31,8 +31,8 @@ void AddMeaning(Word& w) {
   std::vector<std::string> meanings_added;  // All meanings that successfully added
   
   PromptForMeaning();
+  std::string word_meaning;
   while (true) {
-    std::string word_meaning;
     int get_word_meaning{GetWordMeaning(word_meaning)};
 
     if (get_word_meaning == kBreak) break;
@@ -50,6 +50,8 @@ void AddMeaning(Word& w) {
       PromptForMeaning();
     }
   }
+
+  w.SortMeaning();  // Maintain lexicographical order for meanings
 
   // Report added meanings
   std::cout << "\n\n" << meanings_added.size() << " meanings added :\n";

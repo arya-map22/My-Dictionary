@@ -29,8 +29,6 @@ void RemoveWord(Dictionary& dict) {
 
   try {
     dict.RemoveWord(word_name);     // Remove word from dict
-    if (!dict.Modified())
-      dict.set_mod(true);
 
     // Report removed word
     std::cout << "\n\nWord \"" << word_name << "\" removed";

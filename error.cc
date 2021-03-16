@@ -23,8 +23,8 @@ void BadInput::Handle() const {
 
   // If input_stream corrupt give up
   if (input_stream_.bad()) {
-    std::cerr << "Input stream corrupted!\n"
-              << "Program terminated..." << std::endl;
+    std::cerr << "BadInput : input stream corrupted"
+              << "\n\nProgram terminated..." << std::endl;
     exit(EXIT_FAILURE);
   }
 
@@ -36,7 +36,8 @@ void BadInput::Handle() const {
 // Display error message then exit program
 void FileError::Handle() const {
   std::cerr << "\nFileError : " << what() 
-            << "\nIn file   : " << file_name_<< std::endl;
+            << "\nIn file   : " << file_name_
+            << "\n\nProgram terminated..." << std::endl;
   exit(EXIT_FAILURE);   // Exit program
 }
 

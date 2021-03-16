@@ -8,6 +8,7 @@
 #include "my_dictionary/dictionary.h"
 
 #include <iomanip>
+#include <fstream>
 #include <iostream>
 #include <map>
 #include <sstream>
@@ -18,6 +19,70 @@
 #include "my_dictionary/word.h"
 
 namespace my_dictionary {
+
+// Fill the dictionary dict from file file_name
+void LoadDictFromFile(Dictionary& dict, const std::string& file_name) {
+  std::ifstream dict_file{file_name};
+  if (!dict_file)
+    throw FileError("Can't open file", file_name);
+
+  while (true) {
+    Word tmp;
+    dict_file >> tmp;
+    if (dict_file.eof())
+      break;
+    else if (!dict_file)
+      throw FileError("Error while reading file", dict.get_file_name());
+
+    dict.AddWord(tmp);
+  }
+}
+
+// Save modification in dictionary dict to file file_name
+void SaveDictToFIle(Dictionary& dict, const std::string& file_name) {
+  if (!dict.Modified()) return;
+
+  std::ofstream dict_file(file_name);
+  if (!dict_file)
+    throw FileError("Can't open file", file_name);
+
+  std::ostringstream oss;
+  for (const auto& p : dict.words_) {
+    oss << p.second << "\n";
+    if (!oss)
+      throw FileError("Error while writing to file", file_name);
+  }
+
+  dict_file << oss.str();
+  if (!dict_file)
+    throw FileError("Error while writing to file", file_name);
+
+  dict.set_mod(false);
+}
+
+// Remove suffix from string str
+inline std::string RemoveSuffix(const std::string& str) {
+  auto pos{str.find('.')};
+  return str.substr(0, pos);
+}
+
+// Construct dictionary with name dn from file fn
+Dictionary::Dictionary(const std::string& dn, const std::string& fn)
+    : dict_name_(dn), file_name_(fn) {
+  try {
+    LoadDictFromFile(*this, file_name_);
+  } catch (FileError& e) {
+    e.Handle();
+  }
+}
+
+// Default constructor
+Dictionary::Dictionary()
+    : Dictionary("dictionary", "dictionary.txt") { }
+
+// Construct dictionary from file name fn
+Dictionary::Dictionary(const std::string& fn)
+    : Dictionary(RemoveSuffix(fn), fn) { }
 
 // Check if Word w exist or not
 bool Dictionary::WordExist(const std::string& w) const {
@@ -84,7 +149,7 @@ std::ostream& ShowDictionary(const Dictionary& dict, std::ostream& os) {
   Dictionary::size_type cnt{1}; // The number of Word
   for (const auto& p : dict.words_) {
     oss << std::setw(3) << std::left << cnt++ << ") "
-      << p.second.get_name() << std::setw(4) << std::right
+      << std::setw(30) << p.second.get_name()
       <<"(" << p.second.WordClassToStr() << ")" << "\n";
   }
 

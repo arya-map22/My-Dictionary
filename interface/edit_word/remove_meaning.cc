@@ -29,8 +29,8 @@ void RemoveMeaning(Word& w) {
   std::vector<std::string> meanings_removed;  // All meanings that successfully removed
 
   PromptForMeaning();
+  std::string word_meaning;
   while (true) {
-    std::string word_meaning;
     int get_word_meaning{GetWordMeaning(word_meaning)};
 
     if (get_word_meaning == kBreak) break;
@@ -48,6 +48,8 @@ void RemoveMeaning(Word& w) {
       PromptForMeaning();
     }
   }
+
+  w.SortMeaning();  // Maintain lexicographical order for meanings
 
   // Report removed meanings
   std::cout << "\n\n" << meanings_removed.size() << " meanings removed :\n";

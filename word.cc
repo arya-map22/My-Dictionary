@@ -40,7 +40,7 @@ void Word::AddMeaning(const std::string& wm) {
   // Check if meaning m already exist
   if (MeaningExist(wm)) 
     throw Error("Meaning \""+wm+"\" already in word \""+name_+"\"");  // Throw Error
-  
+
   meanings_.push_back(wm);  // Add meaning m
 }
 
@@ -102,7 +102,7 @@ std::string Word::WordClassToStr() const {
 */
 std::ostream& PrintWord(const Word& w, std::ostream& os) {
   std::ostringstream oss;   // Output string stream
-  oss << w.get_name() << std::setw(3)
+  oss << std::setw(30) << std::left << w.get_name() 
     << "(" << w.WordClassToStr() << ") :\n"
     << w.get_meanings();
 
@@ -261,8 +261,10 @@ std::istream& operator>>(std::istream& is, Word& w) {
   // Reading separator for end of the Word
   is >> sep;
   if (!is) return is;
-  if (sep != '}')
+  if (sep != '}') {
+    is.clear(std::ios_base::failbit);
     throw BadInput("Bad end of Word", is);
+  }
 
   w.name_ = rw.name; // Copy name from Reading to Word
 
