@@ -48,9 +48,12 @@ void Word::AddMeaning(const std::string& wm) {
 // Throw Error if meaning wm doesn't exist
 void Word::RemoveMeaning(const std::string& wm) {
   for (auto it = meanings_.cbegin(); it != meanings_.cend(); ++it) {
-    if (*it == wm) meanings_.erase(it);  // Remove meaning m
-    return;
+    if (*it == wm) {
+      meanings_.erase(it);  // Remove meaning m
+      return;
+    }
   }
+
   // Meaning m doesn't exist, throw Error
   throw Error("Meaning \""+wm+"\" doesn't exist in word \""+name_+"\"");
 }

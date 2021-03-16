@@ -24,8 +24,8 @@ error.o: error.cc error.h
 word.o: word.cc word.h error.h
 	${g++_compile} -c $< -o $@
 
-main_interface.o: main_interface.cc main_interface.h dictionary.h error.h auxiliary.h add_word.h \
-		remove_word.h add_meaning.h change_name.h change_class.h remove_meaning.h
+main_interface.o: main_interface.cc main_interface.h dictionary.h error.h auxiliary.h edit.h \
+		add_word.h remove_word.h add_meaning.h change_name.h change_class.h remove_meaning.h
 	${g++_compile} -c $< -o $@
 
 edit.o: edit.cc edit.h dictionary.h error.h word.h auxiliary.h

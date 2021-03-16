@@ -26,7 +26,6 @@ void RemoveMeaning(Word& w) {
   ClearScreen();
   std::cout << "Removing meanings to word \"" << w.get_name() << "\"";
 
-  size_t meanings_removed_count{0};           // The number of meanings that successfully removed
   std::vector<std::string> meanings_removed;  // All meanings that successfully removed
 
   PromptForMeaning();
@@ -39,12 +38,10 @@ void RemoveMeaning(Word& w) {
 
     // Remove word_meaning from w
     try {
-      w.RemoveMeaning(word_meaning);
-      ++meanings_removed_count;
       meanings_removed.push_back(word_meaning);
+      w.RemoveMeaning(word_meaning);
     } catch (Error& e) {
       e.Handle();
-      --meanings_removed_count;
       meanings_removed.pop_back();
       WaitForButton();
       ClearScreen();
@@ -53,7 +50,7 @@ void RemoveMeaning(Word& w) {
   }
 
   // Report removed meanings
-  std::cout << "\n\n" << meanings_removed_count << " meanings removed :\n";
+  std::cout << "\n\n" << meanings_removed.size() << " meanings removed :\n";
   for (const auto& wm : meanings_removed) {
     std::cout << std::setw(4) << "- " << wm << "\n";
   }

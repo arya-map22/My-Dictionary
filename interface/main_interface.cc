@@ -28,6 +28,7 @@
 #include "my_dictionary/error.h"
 
 #include "my_dictionary/interface/auxiliary.h"
+#include "my_dictionary/interface/edit.h"
 
 #include "my_dictionary/interface/edit_dict/add_word.h"
 #include "my_dictionary/interface/edit_dict/remove_word.h"
@@ -124,11 +125,7 @@ void FindAWord(const Dictionary& dict) {
   try {
     ClearScreen();
     std::string word_name;
-    std::cout << "Enter word-name : ";
-    ClearNewline();   // Ignore previous newline
-    std::getline(std::cin, word_name);
-    if (!std::cin)
-      throw BadInput("Error while reading input from user", std::cin);
+    GetWordName(word_name);
 
     PrintWord(dict.get_word(word_name), std::cout);
     WaitForButton();
@@ -171,8 +168,7 @@ void EditDict(Dictionary& dict) {
       ShowMenuEditDict(dict);
       char opt{};
       std::cin >> opt;
-      if (!std::cin)
-        throw BadInput("Error while reading input from user", std::cin);
+      CheckIstream();
 
       switch (std::tolower(opt)) {
         case '1':
@@ -183,12 +179,8 @@ void EditDict(Dictionary& dict) {
           break;
         case '3':
           {
-            std::cout << "\n\nEnter word-name to edit : ";
             std::string word_name;
-            ClearNewline();   // Ignore previous newline
-            std::getline(std::cin, word_name);
-            if (!std::cin)
-              throw BadInput("Error while reading input from user", std::cin);  
+            GetWordName(word_name);
 
             try {
               EditWord(dict.get_word(word_name));
@@ -221,14 +213,14 @@ void EditDict(Dictionary& dict) {
 void ShowMenuEditWord(const Word& w) {
   ClearScreen();
   std::cout << "Word-name   : " << w.get_name()
-            << "Word-class  : " << w.WordClassToStr()
+            << "\nWord-class  : " << w.WordClassToStr()
             << "\n\nMenu for editting word : "
             << "\n1.) Change name"
             << "\n2.) Change class"
             << "\n3.) Add meaning"
             << "\n4.) Remove meaning"
             << "\n5.) Preview word"
-            << "\nEnter your option ('q' to quit editting word) : ";
+            << "\n\nEnter your option ('q' to quit editting word) : ";
 }
 
 // Print menu for editiing word w and
@@ -239,8 +231,7 @@ void EditWord(Word& w) {
       ShowMenuEditWord(w);
       char opt{};
       std::cin >> opt;
-      if (!std::cin)
-        throw BadInput("Error while reading input from user", std::cin);
+      CheckIstream();
 
       switch (std::tolower(opt)) {
         case '1':
@@ -256,6 +247,8 @@ void EditWord(Word& w) {
           RemoveMeaning(w);
           break;
         case '5':
+          ClearScreen();
+          std::cout << "* ";
           PrintWord(w, std::cout) << "\n";
           ClearNewline();
           WaitForButton();

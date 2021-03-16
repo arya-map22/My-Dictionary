@@ -18,6 +18,7 @@ int main() {
     try {
       my_dictionary::ShowMenu();      // Prompt user to chose option
       std::cin >> opt;                // Read user input
+      my_dictionary::CheckIstream();
       my_dictionary::EvalOption(opt); // Chose spesific operation based on chosen option
     } catch (my_dictionary::Error& e) {
       e.Handle();

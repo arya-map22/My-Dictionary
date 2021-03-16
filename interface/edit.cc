@@ -43,7 +43,7 @@ void GetWordName(std::string& word_name) {
 // 1 == kVerb, 2 == kNoun
 // 3 == kAdjective, 4 == kAdverb
 void GetWordClass(int& word_class) {
-  std::cout << "\nEnter a new word-class"
+  std::cout << "\n\nEnter a new word-class"
             << "\n1 = Verb; 2 = Noun; 3 = Adjective; 4 = Adverb"
             << "\n: ";
   std::cin >> word_class;

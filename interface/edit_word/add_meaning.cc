@@ -28,7 +28,6 @@ void AddMeaning(Word& w) {
   ClearScreen();
   std::cout << "Adding meanings to word \"" << w.get_name() << "\"";
 
-  size_t meanings_added_count{0};           // The number of meanings that successfully added
   std::vector<std::string> meanings_added;  // All meanings that successfully added
   
   PromptForMeaning();
@@ -41,12 +40,10 @@ void AddMeaning(Word& w) {
 
     // Add word_meaning to w
     try {
-      w.AddMeaning(word_meaning);
-      ++meanings_added_count;
       meanings_added.push_back(word_meaning);
+      w.AddMeaning(word_meaning);
     } catch (Error& e) {
       e.Handle();
-      --meanings_added_count;
       meanings_added.pop_back();
       WaitForButton();
       ClearScreen();
@@ -55,7 +52,7 @@ void AddMeaning(Word& w) {
   }
 
   // Report added meanings
-  std::cout << "\n\n" << meanings_added_count << " meanings added :\n";
+  std::cout << "\n\n" << meanings_added.size() << " meanings added :\n";
   for (const auto& wm : meanings_added) {
     std::cout << std::setw(4) << "- " << wm << "\n";
   }
