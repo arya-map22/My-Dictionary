@@ -60,7 +60,7 @@ void AddWord(Dictionary& dict) {
     dict.AddWord(new_word);    // Add a new word to dict
 
     // Report added word
-    std::cout << "\n\nAdded word :"
+    std::cout << "\n\nAdded word :" 
               << "\n* ";
     PrintWord(new_word, std::cout) << "\n";
     ClearNewline();

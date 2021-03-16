@@ -127,9 +127,10 @@ void FindAWord(const Dictionary& dict) {
     ClearScreen();
     std::string word_name;
     GetWordName(word_name);
+    const Word& w{dict.get_word(word_name)};
 
     std::cout << "\n* ";
-    PrintWord(dict.get_word(word_name), std::cout);
+    PrintWord(w, std::cout);
     WaitForButton();
   } catch (Error& e) {
     e.Handle();
