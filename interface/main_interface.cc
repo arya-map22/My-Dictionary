@@ -148,10 +148,15 @@ void ExitProgram() {
     char opt{};
     std::cin >> opt;
     CheckIstream();
-    if (std::tolower(opt) == 'y')
-      SaveModification(my_dict);
-    else if (std::tolower(opt) != 'n')
-      throw Error("Invalid option");
+    switch (std::tolower(opt)) {
+      case 'y':
+        SaveModification(my_dict);
+        break;
+      case 'n':
+        break;
+      default:
+        throw Error("Invalid option");
+    }
   }
 
   ClearScreen();

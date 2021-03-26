@@ -103,8 +103,8 @@ std::string Word::WordClassToStr() const {
 std::ostream& PrintWord(const Word& w, std::ostream& os) {
   std::ostringstream oss;   // Output string stream
   oss << std::setw(30) << std::left << w.get_name() 
-    << "(" << w.WordClassToStr() << ") :\n"
-    << w.get_meanings();
+      << std::setw(12) << "(" + w.WordClassToStr() + ")" << ":\n"
+      << w.get_meanings();
 
   os << oss.str();  // Write to ostream os
   return os;
